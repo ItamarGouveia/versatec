@@ -15,13 +15,18 @@ import {
     updateDoc,
     deleteDoc,
     doc,
+    get
   } from "firebase/firestore";
 
-export default function EditCategoria({ closeEvent }) {
+export default function EditCategoria({ fid,closeEvent }) {
     const [name, setName] = useState("")
-    
     const [rows, setRows] = useState([]);
     const empCollectionRef = collection(db, "categoria");
+
+    useEffect(()=>{
+        console.log(fid.id)
+        setName(fid.name)
+    },[])
 
     const handleChangeName = (event) => {
         setName(event.target.value)
@@ -33,15 +38,20 @@ export default function EditCategoria({ closeEvent }) {
       };
 
     const createCategoria = async () => {
-        await addDoc(empCollectionRef,{
-            name:name,
-       
-        })
+        const categDoc = doc(db, "categoria",fid.id)
+        const newFields ={
+            name:name
+        }
+        await updateDoc(categDoc, newFields)
+        getCategoria()
         closeEvent()
+        Swal.fire("Alterado","Registro alterado com sucesso",'success')
+        }
         
-        Swal.fire("Enviado","Seu registro foi salvo com sucesso",'success')
         
-    }
+        
+        
+    
 
  
 

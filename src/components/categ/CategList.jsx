@@ -149,7 +149,7 @@ export default function CategList() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <EditCateg closeEvent={handleEditClose}/>
+          <EditCateg closeEvent={handleEditClose} fid={formid}/>
         </Box>
       </Modal>
 
