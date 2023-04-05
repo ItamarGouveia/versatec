@@ -15,12 +15,10 @@ Essas instruções permitirão que você obtenha uma cópia do projeto em opera�
 Consulte **[Implantação](#-implanta%C3%A7%C3%A3o)** para saber como implantar o projeto.
 
 ### 📋 Pré-requisitos
-
-De que coisas você precisa para instalar o software e como instalá-lo?
-
-```
-Dar exemplos
-```
+<img src="https://github.com/ItamarGouveia/versatec/blob/main/img-git/1.png?raw=true" width="900"><br />
+<img src="https://github.com/ItamarGouveia/versatec/blob/main/img-git/2.png?raw=true" width="900"><br />
+<img src="https://github.com/ItamarGouveia/versatec/blob/main/img-git/3.png?raw=true" width="900"><br />
+<img src="https://github.com/ItamarGouveia/versatec/blob/main/img-git/4.png?raw=true" width="900"><br />
 
 ### 🔧 Instalação
 
