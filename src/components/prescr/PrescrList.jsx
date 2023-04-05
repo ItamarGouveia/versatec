@@ -171,9 +171,7 @@ export default function PrescrList() {
                 <TableCell align='left' style={{ minWidth: '100px' }}>
                   Email
                 </TableCell>
-                <TableCell align='left' style={{ minWidth: '100px' }}>
-                  Categoria
-                </TableCell>
+               
                 <TableCell align='left' style={{ minWidth: '100px' }}>
                   Imagem  
                 </TableCell>
@@ -196,9 +194,7 @@ export default function PrescrList() {
                         <TableCell  align='left'>
                           {row.email}
                         </TableCell>
-                        <TableCell  align='left'>
-                          {row.category}
-                        </TableCell>
+                      
                         <TableCell  align='left'>
                           {row.image}
                         </TableCell>

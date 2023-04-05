@@ -5,8 +5,9 @@ import { useState, useEffect } from 'react'
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import MenuItem from '@mui/material/MenuItem';
-import { db } from "../../firebase.config"
-
+import { db,storage } from "../../firebase.config"
+import { ref,uploadBytes, uploadBytesResumable,getDownloadURL} from 'firebase/storage'
+import {v4} from 'uuid'
 import Swal from "sweetalert2";
 import {
     collection,
@@ -20,11 +21,16 @@ import {
 export default function AddPrescr({ closeEvent }) {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
-    const [image, setImage] = useState("")
+    const [image, setImage] = useState()
+    const [cardFile, setCardFile] = useState();
+
     const [category, setCategory] = useState("")
     const [description, setDescription] = useState("")
     const [rows, setRows] = useState([]);
     const empCollectionRef = collection(db, "receitas");
+
+    const [imgURL,setImgURL] = useState("")
+    const [progress,setProgress] = useState(0)
 
     const handleChangeName = (event) => {
         setName(event.target.value)
@@ -32,9 +38,15 @@ export default function AddPrescr({ closeEvent }) {
     const handleChangeEmail = (event) => {
         setEmail(event.target.value)
     }
-    const handleChangeImage = (event) => {
-        setImage(event.target.value)
+  
+
+    const handleUploadFile = (e) => {
+        setCardFile(e.target.files[0]);
+        setImage(e.target.value)
+
+  
     }
+
     const handleChangeCategory = (event) => {
         setCategory(event.target.value)
     }
@@ -46,18 +58,43 @@ export default function AddPrescr({ closeEvent }) {
         setRows(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
 
-    const createPrescr = async () => {
+    
+    
+
+    const createPrescr = async () => { 
+
+        if(cardFile == null)return
+        
+        const imageRef = ref(storage, `images/${v4() + cardFile.name}`)
+       
+        const uploadTask = uploadBytesResumable(imageRef,cardFile)
+        uploadTask.on(
+            "state_changed",
+            snapshot =>{
+                const progress = (snapshot.bytesTransferred /snapshot.totalBytes) *100
+                setProgress(progress)
+            },
+            error =>{
+                alert(error)
+            },
+            ()=>{
+                getDownloadURL(uploadTask.snapshot.ref).then(url =>{
+                 setImgURL(url)
+                })
+            }
+        )
         await addDoc(empCollectionRef, {
             name: name,
             email: email,
-            image: image,
+            image: imgURL,
             category: category,
             description: description
         })
         getPrescr()
         closeEvent()
-        console.log(name,email,image,category,description)
+        
         Swal.fire("Enviado", "Seu registro foi salvo com sucesso", 'success')
+    
     }
 
     const currencies = [
@@ -113,11 +150,13 @@ export default function AddPrescr({ closeEvent }) {
                         
                         variant="outlined"
                         type="file"
-                        onChange={handleChangeImage}
+                        onChange={handleUploadFile} 
+                        accept=".png, .jpg, .jpeg"
                         size="small"
                         sx={{ minWidth: "100%" }}
                         value={image}
                     />
+                    <progress value={progress} max="100"/>
 
                 </Grid>
                 <Grid item xs={12}>
