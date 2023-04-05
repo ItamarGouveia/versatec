@@ -8,7 +8,7 @@ iPrescrição é um projeto de software web que tem como objetivo fornecer uma p
 
 Você pode ver o sistema funcionando [aqui](https://versareceitas.web.app/)
 
-Consulte **[Implantação](#-implanta%C3%A7%C3%A3o)** para saber como implantar o projeto.
+
 
 ### 📋 Telas do Sistema
 <img src="https://github.com/ItamarGouveia/versatec/blob/main/img-git/1.png?raw=true" width="900"><br />
