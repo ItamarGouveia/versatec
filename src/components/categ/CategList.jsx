@@ -29,6 +29,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Modal from '@mui/material/Modal';
 import AddCateg from '../categ/AddCateg';
+import EditCateg from '../categ/EditCateg';
 
 
 const style = {
@@ -56,8 +57,12 @@ export default function CategList() {
   const [rows, setRows] = useState([]);
   const empCollectionRef = collection(db, "categoria");
   const [open, setOpen] = useState(false);
+  const [editopen, setEditOpen] = useState(false);
+  const [formid, setFormid] = useState("");
   const handleOpen = () => setOpen(true);
+  const handleEditOpen = () => setEditOpen(true);
   const handleClose = () => setOpen(false);
+  const handleEditClose = () => setEditOpen(false);
                                            
   useEffect(() => {
     getCategoria();
@@ -75,7 +80,7 @@ export default function CategList() {
     Swal.fire({
       title: "Você tem certeza?",
       text: "Essa ação não pode ser desfeita!",
-      icon: "Alerta",
+      icon: 'question',
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
@@ -112,6 +117,17 @@ export default function CategList() {
     }
   };
 
+
+  const editCategoria=(id,name)=>{
+    const data={
+      id:id,
+      name:name
+    }
+    
+    setFormid(data)
+    handleEditOpen()
+  }
+
   return (
     <>
     <div>
@@ -125,6 +141,22 @@ export default function CategList() {
           <AddCateg closeEvent={handleClose}/>
         </Box>
       </Modal>
+
+      <Modal
+        open={editopen}
+        onClose={handleEditClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <EditCateg closeEvent={handleEditClose}/>
+        </Box>
+      </Modal>
+
+     
+
+  
+   
     </div>
 
     <Paper sx={{ width: '100%', overflow: 'hidden'}}>
@@ -195,7 +227,9 @@ export default function CategList() {
                                 cursor: "pointer",
                               }}
                               className="cursor-pointer"
-                              // onClick={() => editUser(row.id)}
+                              onClick={()=>{
+                                editCategoria(row.id,row.name)
+                              }}
                             />
                             <DeleteIcon
                               style={{

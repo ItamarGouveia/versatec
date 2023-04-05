@@ -75,7 +75,7 @@ export default function PrescrList() {
     Swal.fire({
       title: "Você tem certeza?",
       text: "Essa ação não pode ser desfeita!",
-      icon: "Alerta",
+      icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
