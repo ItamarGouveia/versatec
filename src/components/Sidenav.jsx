@@ -18,7 +18,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import InfoIcon from '@mui/icons-material/Info';
 import HomeIcon from '@mui/icons-material/Home';
-
+import { AuthGoogleContext } from '../context/authGoogle';
 
 const drawerWidth = 240;
 
@@ -74,6 +74,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function Sidenav() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+  const {user,sair} =React.useContext(AuthGoogleContext)
 
 const navigate= useNavigate()
 
@@ -90,7 +91,7 @@ const navigate= useNavigate()
         <Divider />
         <List>
           
-            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/")}}>
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/home")}}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -154,7 +155,7 @@ const navigate= useNavigate()
             </ListItem>
 
 
-            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/sair")}}>
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>sair()}>
               <ListItemButton
                 sx={{
                   minHeight: 48,

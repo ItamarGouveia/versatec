@@ -1,10 +1,13 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
 import Sidenav from '../components/Sidenav'
 import { Box } from '@mui/material'
 import Navbar from '../components/Navbar'
 import homeImg from '../assets/home.png'
 
+
 function Home() {
+
+  
   return (
     <>
     
