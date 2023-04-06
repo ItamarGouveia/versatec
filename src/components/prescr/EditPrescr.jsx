@@ -78,20 +78,22 @@ export default function EditPrescr({ fid,closeEvent }) {
     }
 
 
+    
+
+
     const createPrescr = async () => {
-        const img = await upload(cardFile)
-        await addDoc(empCollectionRef, {
+        const categDoc = doc(db, "receitas",fid.id)
+        const newFields ={
             name: name,
             email: email,
             category: category,
             description: description
-        })
-        getPrescr()
+        }
+        await updateDoc(categDoc, newFields)
+        getCategoria()
         closeEvent()
-
-        Swal.fire("Enviado", "Seu registro foi salvo com sucesso", 'success')
-
-    }
+        Swal.fire("Alterado","Registro alterado com sucesso",'success')
+        }
 
     useEffect(()=>{
         
