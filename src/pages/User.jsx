@@ -7,13 +7,11 @@ import PrescriList from '../components/prescr/PrescrList';
 function User() {
   return (
     <>
-    
     <Navbar/>
     <Box height={70}/>
     <Box sx={{display:"flex"}}>
     <Sidenav/>
-    
-    
+   
     <Box component="main" sx={{flexGrow:1,p:3}}>
     <PrescriList/>
     </Box>
