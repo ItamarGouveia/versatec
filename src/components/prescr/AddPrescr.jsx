@@ -5,10 +5,13 @@ import { useState, useEffect } from 'react'
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import MenuItem from '@mui/material/MenuItem';
-import { db,storage } from "../../firebase.config"
-import { ref,uploadBytes, uploadBytesResumable,getDownloadURL} from 'firebase/storage'
-import {v4} from 'uuid'
+import { db, storage } from "../../firebase.config"
+import { ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { v4 } from 'uuid'
 import Swal from "sweetalert2";
+import LinearProgress from '@mui/material/LinearProgress';
+
+
 import {
     collection,
     getDocs,
@@ -29,8 +32,8 @@ export default function AddPrescr({ closeEvent }) {
     const [rows, setRows] = useState([]);
     const empCollectionRef = collection(db, "receitas");
 
-    const [imgURL,setImgURL] = useState("")
-    const [progress,setProgress] = useState(0)
+    const [imgURL, setImgURL] = useState("")
+    const [progress, setProgress] = useState(null)
 
     const handleChangeName = (event) => {
         setName(event.target.value)
@@ -38,13 +41,13 @@ export default function AddPrescr({ closeEvent }) {
     const handleChangeEmail = (event) => {
         setEmail(event.target.value)
     }
-  
+
 
     const handleUploadFile = (e) => {
         setCardFile(e.target.files[0]);
         setImage(e.target.value)
 
-  
+
     }
 
     const handleChangeCategory = (event) => {
@@ -58,43 +61,31 @@ export default function AddPrescr({ closeEvent }) {
         setRows(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
 
-    
-    
+    async function upload(file) {
+        setProgress(1)
+        if (file == null) return
+        const imageRef = ref(storage, `images/${v4() + '.png'}`)
+        await uploadBytes(imageRef, file)
+        const url = await getDownloadURL(imageRef)
+        return url
 
-    const createPrescr = async () => { 
+    }
 
-        if(cardFile == null)return
-        
-        const imageRef = ref(storage, `images/${v4() + cardFile.name}`)
-       
-        const uploadTask = uploadBytesResumable(imageRef,cardFile)
-        uploadTask.on(
-            "state_changed",
-            snapshot =>{
-                const progress = (snapshot.bytesTransferred /snapshot.totalBytes) *100
-                setProgress(progress)
-            },
-            error =>{
-                alert(error)
-            },
-            ()=>{
-                getDownloadURL(uploadTask.snapshot.ref).then(url =>{
-                 setImgURL(url)
-                })
-            }
-        )
+
+    const createPrescr = async () => {
+        const img = await upload(cardFile)
         await addDoc(empCollectionRef, {
             name: name,
             email: email,
-            image: imgURL,
+            image: img,
             category: category,
             description: description
         })
         getPrescr()
         closeEvent()
-        
+
         Swal.fire("Enviado", "Seu registro foi salvo com sucesso", 'success')
-    
+
     }
 
     const currencies = [
@@ -124,6 +115,7 @@ export default function AddPrescr({ closeEvent }) {
             </IconButton>
             <Box height={20} />
             <Grid container spacing={2}>
+                {progress && <Box sx={{ width: '100%' }}> <LinearProgress /> </Box>}
                 <Grid item xs={12}>
                     <TextField id="outlined-basic"
                         label="Nome"
@@ -147,16 +139,16 @@ export default function AddPrescr({ closeEvent }) {
                 </Grid>
                 <Grid item xs={12}>
                     <TextField id="outlined-basic"
-                        
+
                         variant="outlined"
                         type="file"
-                        onChange={handleUploadFile} 
-                        accept=".png, .jpg, .jpeg"
+                        onChange={handleUploadFile}
+                        accept=".jpg"
                         size="small"
                         sx={{ minWidth: "100%" }}
                         value={image}
                     />
-                    <progress value={progress} max="100"/>
+
 
                 </Grid>
                 <Grid item xs={12}>

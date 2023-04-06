@@ -193,10 +193,9 @@ export default function PrescrList() {
                         </TableCell>
                         <TableCell  align='left'>
                           {row.email}
-                        </TableCell>
-                      
+                        </TableCell>                  
                         <TableCell  align='left'>
-                          {row.image}
+                          <img src={row.image} alt='img' height={40} width={40}/>
                         </TableCell>
                         <TableCell>
                         <Stack spacing={2} direction="row">
