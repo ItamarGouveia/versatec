@@ -31,7 +31,7 @@ export default function AddPrescr({ closeEvent }) {
     const [description, setDescription] = useState("")
     const [rows, setRows] = useState([]);
     const empCollectionRef = collection(db, "receitas");
-
+    const CollectCategoria = collection(db, "categoria");
     const [imgURL, setImgURL] = useState("")
     const [progress, setProgress] = useState(null)
 
@@ -42,6 +42,15 @@ export default function AddPrescr({ closeEvent }) {
         setEmail(event.target.value)
     }
 
+
+    const getCategoria = async () => {
+        const data = await getDocs(CollectCategoria);
+        setRows(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    useEffect(() => {
+        getCategoria();
+    }, []);
 
     const handleUploadFile = (e) => {
         setCardFile(e.target.files[0]);
@@ -88,17 +97,6 @@ export default function AddPrescr({ closeEvent }) {
 
     }
 
-    const currencies = [
-        {
-            value: 'Categoria 1',
-            label: 'Categoria 1',
-        },
-        {
-            value: 'Categoria 2',
-            label: 'Categoria 2',
-        },
-
-    ];
 
 
     return (
@@ -152,22 +150,18 @@ export default function AddPrescr({ closeEvent }) {
 
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField
-                        id="outlined-basic"
-                        select
-                        label="Categoria"
-                        variant='outlined'
-                        size='small'
-                        onChange={handleChangeCategory}
-                        value={category}
-                        sx={{ minWidth: "100%" }}
-                    >
-                        {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                    <select name='category' value={category} 
+                    style={{width:'100%',height:'45px'}} onChange={handleChangeCategory}>
+                    {
+                        rows
+                            .map((row) => {
+                                return (
+                                    <option value={row.id}>
+                                        {row.name}
+                                    </option>
+                             );
+                            })}
+                    </select>
                 </Grid>
                 <Grid item xs={12}>
                     <TextareaAutosize

@@ -29,6 +29,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Modal from '@mui/material/Modal';
 import AddPrescr from './AddPrescr';
+import EditPrescr from './EditPrescr';
 
 
 const style = {
@@ -52,12 +53,16 @@ function createData(name, code, population, size) {
 
 export default function PrescrList() {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rows, setRows] = useState([]);
   const empCollectionRef = collection(db, "receitas");
   const [open, setOpen] = useState(false);
+  const [editopen, setEditOpen] = useState(false);
   const handleOpen = () => setOpen(true);
+  const handleEditOpen = () => setEditOpen(true);
   const handleClose = () => setOpen(false);
+  const handleEditClose = () => setEditOpen(false);
+  const [formid, setFormid] = useState("");
                                            
   useEffect(() => {
     getPrescr();
@@ -112,6 +117,22 @@ export default function PrescrList() {
     }
   };
 
+
+  const editPrescr=(id,name,email,image,category,description)=>{
+    const data={
+      id:id,
+      name:name,
+      email:email,
+      category:category,
+      description:description,
+
+    }
+    
+    setFormid(data)
+    handleEditOpen()
+    
+  }
+
   return (
     <>
     <div>
@@ -123,6 +144,17 @@ export default function PrescrList() {
       >
         <Box sx={style}>
           <AddPrescr closeEvent={handleClose}/>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={editopen}
+        onClose={handleEditClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <EditPrescr closeEvent={handleEditClose} fid={formid}/>
         </Box>
       </Modal>
     </div>
@@ -206,7 +238,9 @@ export default function PrescrList() {
                                 cursor: "pointer",
                               }}
                               className="cursor-pointer"
-                              // onClick={() => editUser(row.id)}
+                              onClick={()=>{
+                                editPrescr(row.id,row.name,row.email, row.image, row.category, row.description)
+                              }}
                             />
                             <DeleteIcon
                               style={{
@@ -228,7 +262,7 @@ export default function PrescrList() {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[5,10, 25, 100]}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}
